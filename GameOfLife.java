@@ -42,11 +42,13 @@ public class GameOfLife extends JPanel implements ItemListener {
 
     /* Inner class that defines drawing modes:
      * 1. Free hand drawing on main grid,
-     * 2. Stamping from pattern grid to main grid
-     * 3. Screen copy from main grid to pattern grid
+     * 2. Stamping entire area from pattern grid to main grid
+     * 3. Stamping pattern only from pattern grid to main grid
+     * 4. Screen copy entire area from main grid to pattern grid
+     * 5. Screen copy pattern only from main grid to pattern grid
      */
     private static class drawingMode {
-	private enum drawingModes { freeHand, patternStamp, screenCopy };
+	private enum drawingModes { freeHand, patternScreenStamp, patternOnlyStamp, screenFullCopy, screenPatternCopy };
 	private static drawingModes currentDrawingMode;
 
 	public drawingMode () {
@@ -56,28 +58,46 @@ public class GameOfLife extends JPanel implements ItemListener {
 	public boolean isFreeHand() {
 	    if (drawingMode.currentDrawingMode == drawingModes.freeHand) { return true; }
 	    else { return false; }
-	    }
+	}
 
 	public void setFreeHand() {
 	    drawingMode.currentDrawingMode = drawingModes.freeHand;
 	}
 
-	public boolean isScreenCopy() {
-	    if (drawingMode.currentDrawingMode == drawingModes.screenCopy) { return true; }
+	public boolean isScreenFullCopy() {
+	    if (drawingMode.currentDrawingMode == drawingModes.screenFullCopy) { return true; }
 	    else { return false; }
 	}
 
-	public void setScreenCopy() {
-	    drawingMode.currentDrawingMode = drawingModes.screenCopy;
+	public void setScreenFullCopy() {
+	    drawingMode.currentDrawingMode = drawingModes.screenFullCopy;
 	}
 
-	public boolean isPatternStamp() {
-	    if (drawingMode.currentDrawingMode == drawingModes.patternStamp) { return true; }
+	public boolean isScreenPatternCopy() {
+	    if (drawingMode.currentDrawingMode == drawingModes.screenPatternCopy) { return true; }
 	    else { return false; }
 	}
 
-	public void setPatternStamp() {
-	    drawingMode.currentDrawingMode = drawingModes.patternStamp;
+	public void setScreenPatternCopy() {
+	    drawingMode.currentDrawingMode = drawingModes.screenPatternCopy;
+	}
+
+	public boolean isPatternScreenStamp() {
+	    if (drawingMode.currentDrawingMode == drawingModes.patternScreenStamp) { return true; }
+	    else { return false; }
+	}
+
+	public void setPatternScreenStamp() {
+	    drawingMode.currentDrawingMode = drawingModes.patternScreenStamp;
+	}
+
+	public boolean isPatternOnlyStamp() {
+	    if (drawingMode.currentDrawingMode == drawingModes.patternOnlyStamp) { return true; }
+	    else { return false; }
+	}
+
+	public void setPatternOnlyStamp() {
+	    drawingMode.currentDrawingMode = drawingModes.patternOnlyStamp;
 	}
     }
 
@@ -124,16 +144,13 @@ public class GameOfLife extends JPanel implements ItemListener {
 
     // Window sections
     private static JFrame gridFrame;
-    private static JLayeredPane layeredPanel;
     private static JPanel gridPanel, patternPanel, gridToolPanel, rulePanel;
-    //private static JToolBar gridToolBar;
 
     // Window components
     private static JCheckBoxMenuItem[] cbmi;
     private static JTextArea rowValue, colValue, counterValue;
     private static Action startStop, step, clear;
     private static JLabel patternGridLabel;
-    private static JLabel testLabel;
 
     // Grid parameters
     private static int[][] gridLeft, gridRight, patternGrid;
@@ -151,7 +168,8 @@ public class GameOfLife extends JPanel implements ItemListener {
     private static Integer generation = 0;
 
     // Settings
-    private static Boolean running = false, leftFrame = true, dragging = false, wrapAround = false, wildcardsOnly = false, showGrid = false;
+    private static Boolean running = false, dragging = false, leftFrame = true, wrapAround = false, showGrid = false,
+	    		   wildcardsOnly = false, patternOnly = false;
     private static drawingMode drawingModeCurrently;
     private static displayMode displayModeCurrently;
 
@@ -224,24 +242,7 @@ public class GameOfLife extends JPanel implements ItemListener {
 						    gridRight[gridX][gridY] = cellValue;
 						}
 
-						switch (cellValue) {
-						    case 1:	g2d.setColor(Color.WHITE);
-						    		break;
-						    case 2:	g2d.setColor(Color.RED);
-					    			break;
-						    case 3:	g2d.setColor(Color.ORANGE);
-					    			break;
-						    case 4:	g2d.setColor(Color.YELLOW);
-					    			break;
-						    case 5:	g2d.setColor(Color.GREEN);
-					    			break;
-						    case 6:	g2d.setColor(Color.BLUE);
-					    			break;
-						    case 7:	g2d.setColor(new Color(102, 0, 153));	// Purple
-					    			break;
-						    case 8:	g2d.setColor(new Color(102, 51, 0));	// Brown
-					    			break;
-						}
+						setCellColor(g2d, cellValue);
 					    }
 					}
 
@@ -250,14 +251,26 @@ public class GameOfLife extends JPanel implements ItemListener {
 		                }
 	                }
 	                // Only need to handle alternate drawing modes here
-	                else if (drawingModeCurrently.isPatternStamp()) {
+	                else if (drawingModeCurrently.isPatternScreenStamp()) {
+	                	stampFullGrid(gridX, gridY);
+	                	g2d.setColor(Color.WHITE);
+
+	                	if (leftFrame) { paintFromThisGrid(gridLeft, g2d); }
+	                	else { paintFromThisGrid(gridRight, g2d); }
+	                }
+	                else if (drawingModeCurrently.isPatternOnlyStamp()) {
 	                	stampGrid(gridX, gridY);
 	                	g2d.setColor(Color.WHITE);
 
 	                	if (leftFrame) { paintFromThisGrid(gridLeft, g2d); }
 	                	else { paintFromThisGrid(gridRight, g2d); }
 	                }
-	                else if (drawingModeCurrently.isScreenCopy()) {
+	                else if (drawingModeCurrently.isScreenFullCopy()) {
+	                	copyFullGrid(gridX, gridY);
+	                	g2d.setColor(Color.WHITE);
+	                	paintPatternGrid(g2d);
+	                }
+	                else if (drawingModeCurrently.isScreenPatternCopy()) {
 	                	copyGrid(gridX, gridY);
 	                	g2d.setColor(Color.WHITE);
 	                	paintPatternGrid(g2d);
@@ -277,7 +290,9 @@ public class GameOfLife extends JPanel implements ItemListener {
         	    colValue.setText(Integer.toString(startX));
 
         	    // Update select rectangle when game is not active
-        	    if ((drawingModeCurrently.isPatternStamp()) || (drawingModeCurrently.isScreenCopy())) {
+        	    if (!drawingModeCurrently.isFreeHand()) {
+        	    //if ((drawingModeCurrently.isPatternScreenStamp()) || (drawingModeCurrently.isScreenFullCopy())
+        	    //|| (drawingModeCurrently.isPatternOnlyStamp()) || (drawingModeCurrently.isScreenPatternCopy())) {
                 	if ((startX < focusArea) && (startY < focusArea)) {
                 	    gridFrame.repaint();
                 	}
@@ -342,24 +357,7 @@ public class GameOfLife extends JPanel implements ItemListener {
 						    gridRight[gridX][gridY] = cellValue;
 						}
 
-						switch (cellValue) {
-						    case 1:	g2d.setColor(Color.WHITE);
-						    		break;
-						    case 2:	g2d.setColor(Color.RED);
-					    			break;
-						    case 3:	g2d.setColor(Color.ORANGE);
-					    			break;
-						    case 4:	g2d.setColor(Color.YELLOW);
-					    			break;
-						    case 5:	g2d.setColor(Color.GREEN);
-					    			break;
-						    case 6:	g2d.setColor(Color.BLUE);
-					    			break;
-						    case 7:	g2d.setColor(new Color(102, 0, 153));	// Purple
-					    			break;
-						    case 8:	g2d.setColor(new Color(102, 51, 0));	// Brown
-					    			break;
-						}
+						setCellColor(g2d, cellValue);
 					    }
 					}
 
@@ -438,24 +436,7 @@ public class GameOfLife extends JPanel implements ItemListener {
 					cellValue = checkCell(patternGrid, pGridX, pGridY) + 1;
 					patternGrid[pGridX][pGridY] = cellValue;
 
-					switch (cellValue) {
-					    case 1:	g2d.setColor(Color.WHITE);
-					    		break;
-					    case 2:	g2d.setColor(Color.RED);
-				    			break;
-					    case 3:	g2d.setColor(Color.ORANGE);
-				    			break;
-					    case 4:	g2d.setColor(Color.YELLOW);
-				    			break;
-					    case 5:	g2d.setColor(Color.GREEN);
-				    			break;
-					    case 6:	g2d.setColor(Color.BLUE);
-				    			break;
-					    case 7:	g2d.setColor(new Color(102, 0, 153));	// Purple
-				    			break;
-					    case 8:	g2d.setColor(new Color(102, 51, 0));	// Brown
-				    			break;
-					}
+					setCellColor(g2d, cellValue);
 				    }
 				}
 
@@ -509,24 +490,7 @@ public class GameOfLife extends JPanel implements ItemListener {
 					cellValue = checkCell(patternGrid, pGridX, pGridY) + 1;
 					patternGrid[pGridX][pGridY] = cellValue;
 
-					switch (cellValue) {
-					    case 1:	g2d.setColor(Color.WHITE);
-					    		break;
-					    case 2:	g2d.setColor(Color.RED);
-				    			break;
-					    case 3:	g2d.setColor(Color.ORANGE);
-				    			break;
-					    case 4:	g2d.setColor(Color.YELLOW);
-				    			break;
-					    case 5:	g2d.setColor(Color.GREEN);
-				    			break;
-					    case 6:	g2d.setColor(Color.BLUE);
-				    			break;
-					    case 7:	g2d.setColor(new Color(102, 0, 153));	// Purple
-				    			break;
-					    case 8:	g2d.setColor(new Color(102, 51, 0));	// Brown
-				    			break;
-					}
+					setCellColor(g2d, cellValue);
 				    }
 				}
 
@@ -579,25 +543,45 @@ public class GameOfLife extends JPanel implements ItemListener {
             drawingStyleButtons.add(freeHand);
             innerButtonPanel.add(freeHand);
 
-            JRadioButton stamp = new JRadioButton("Stamp: Pattern > Main Grid");
-            stamp.addActionListener(new ActionListener() {
+            JRadioButton stampFull = new JRadioButton("Stamp Pattern Grid +BG > Main Grid");
+            stampFull.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-            	drawingModeCurrently.setPatternStamp();
+            	drawingModeCurrently.setPatternScreenStamp();
                 }
             });
-            drawingStyleButtons.add(stamp);
-            innerButtonPanel.add(stamp);
+            drawingStyleButtons.add(stampFull);
+            innerButtonPanel.add(stampFull);
 
-            JRadioButton copy = new JRadioButton("Copy: Main Grid > Pattern");
-            copy.addActionListener(new ActionListener() {
+            JRadioButton stampDrawing = new JRadioButton("Stamp Pattern > Main Grid");
+            stampDrawing.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-            	drawingModeCurrently.setScreenCopy();
+            	drawingModeCurrently.setPatternOnlyStamp();
                 }
             });
-            drawingStyleButtons.add(copy);
-            innerButtonPanel.add(copy);
+            drawingStyleButtons.add(stampDrawing);
+            innerButtonPanel.add(stampDrawing);
+
+            JRadioButton copyFull = new JRadioButton("Copy Main Grid +BG > Pattern");
+            copyFull.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+            	drawingModeCurrently.setScreenFullCopy();
+                }
+            });
+            drawingStyleButtons.add(copyFull);
+            innerButtonPanel.add(copyFull);
+
+            JRadioButton copyDrawing = new JRadioButton("Copy Main Grid > Pattern");
+            copyDrawing.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+            	drawingModeCurrently.setScreenPatternCopy();
+                }
+            });
+            drawingStyleButtons.add(copyDrawing);
+            innerButtonPanel.add(copyDrawing);
 
             JLabel displayStyleLabel = new JLabel("Display Mode", SwingConstants.CENTER);
             displayStyleLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
@@ -1389,8 +1373,29 @@ public class GameOfLife extends JPanel implements ItemListener {
 	}
     }
 
+    private void setCellColor(Graphics2D g2d, int howManyNeighbors) {
+	switch (howManyNeighbors) {
+	    case 1:	g2d.setColor(Color.WHITE);
+	    		break;
+	    case 2:	g2d.setColor(Color.RED);
+    			break;
+	    case 3:	g2d.setColor(Color.ORANGE);
+    			break;
+	    case 4:	g2d.setColor(Color.YELLOW);
+    			break;
+	    case 5:	g2d.setColor(Color.GREEN);
+    			break;
+	    case 6:	g2d.setColor(Color.BLUE);
+    			break;
+	    case 7:	g2d.setColor(new Color(102, 0, 153));	// Purple
+    			break;
+	    case 8:	g2d.setColor(new Color(102, 51, 0));	// Brown
+    			break;
+	}
+    }
+
     // Separate copy and stamp methods for clarity
-    private void stampGrid(int mainGridRow, int mainGridCol) {
+    private void stampFullGrid(int mainGridRow, int mainGridCol) {
 	// First check which frame to use: less overhead than performing test inside loops
 	if (leftFrame) {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
@@ -1408,7 +1413,29 @@ public class GameOfLife extends JPanel implements ItemListener {
 	}
     }
 
-    private void copyGrid(int mainGridRow, int mainGridCol) {
+    private void stampGrid(int mainGridRow, int mainGridCol) {
+	// First check which frame to use: less overhead than performing test inside loops
+	if (leftFrame) {
+	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
+		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
+		    if (patternGrid[currentRow][currentCol] != 0) {
+			gridLeft[mainGridRow + currentRow][mainGridCol + currentCol] = patternGrid[currentRow][currentCol];
+		    }
+		}
+	    }
+	}
+	else {
+	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
+		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
+		    if (patternGrid[currentRow][currentCol] != 0) {
+			gridRight[mainGridRow + currentRow][mainGridCol + currentCol] = patternGrid[currentRow][currentCol];
+		    }
+		}
+	    }
+	}
+    }
+
+    private void copyFullGrid(int mainGridRow, int mainGridCol) {
 	// First check which frame to use: less overhead than performing test inside loops
 	if (leftFrame) {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
@@ -1421,6 +1448,28 @@ public class GameOfLife extends JPanel implements ItemListener {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
 		    patternGrid[currentRow][currentCol] = gridRight[mainGridRow + currentRow][mainGridCol + currentCol];
+		}
+	    }
+	}
+    }
+
+    private void copyGrid(int mainGridRow, int mainGridCol) {
+	// First check which frame to use: less overhead than performing test inside loops
+	if (leftFrame) {
+	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
+		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
+		    if (gridLeft[mainGridRow + currentRow][mainGridCol + currentCol] != 0) {
+			patternGrid[currentRow][currentCol] = gridLeft[mainGridRow + currentRow][mainGridCol + currentCol];
+		    }
+		}
+	    }
+	}
+	else {
+	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
+		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
+		    if (gridRight[mainGridRow + currentRow][mainGridCol + currentCol] != 0) {
+			patternGrid[currentRow][currentCol] = gridRight[mainGridRow + currentRow][mainGridCol + currentCol];
+		    }
 		}
 	    }
 	}
@@ -1458,24 +1507,7 @@ public class GameOfLife extends JPanel implements ItemListener {
     			g2d.setColor(clr);
     		    }
     		    else if (displayModeCurrently.isColorScale()) {
-    			switch (whichGrid[row][col]) {
-    			    case 1:	g2d.setColor(Color.WHITE);
-    			    		break;
-    			    case 2:	g2d.setColor(Color.RED);
-    			    		break;
-    			    case 3:	g2d.setColor(Color.ORANGE);
-		    			break;
-    			    case 4:	g2d.setColor(Color.YELLOW);
-		    			break;
-    			    case 5:	g2d.setColor(Color.GREEN);
-		    			break;
-    			    case 6:	g2d.setColor(Color.BLUE);
-		    			break;
-    			    case 7:	g2d.setColor(new Color(102, 0, 153));	// Purple
-		    			break;
-    			    case 8:	g2d.setColor(new Color(102, 51, 0));	// Brown
-		    			break;
-    			}
+			setCellColor(g2d, whichGrid[row][col]);
     		    }
     		}
 
@@ -1504,24 +1536,7 @@ public class GameOfLife extends JPanel implements ItemListener {
     			g2d.setColor(clr);
     		    }
     		    else if (displayModeCurrently.isColorScale()) {
-    			switch (patternGrid[row][col]) {
-    			    case 1:	g2d.setColor(Color.WHITE);
-    			    		break;
-    			    case 2:	g2d.setColor(Color.RED);
-    			    		break;
-    			    case 3:	g2d.setColor(Color.ORANGE);
-		    			break;
-    			    case 4:	g2d.setColor(Color.YELLOW);
-		    			break;
-    			    case 5:	g2d.setColor(Color.GREEN);
-		    			break;
-    			    case 6:	g2d.setColor(Color.BLUE);
-		    			break;
-    			    case 7:	g2d.setColor(new Color(102, 0, 153));	// Purple
-		    			break;
-    			    case 8:	g2d.setColor(new Color(102, 51, 0));	// Brown
-		    			break;
-    			}
+			setCellColor(g2d, patternGrid[row][col]);
     		    }
     		}
 
@@ -1544,9 +1559,11 @@ public class GameOfLife extends JPanel implements ItemListener {
         else { paintFromThisGrid(gridRight, g2d); }
 
         // Update select rectangle
-        if ((drawingModeCurrently.isPatternStamp()) || (drawingModeCurrently.isScreenCopy())) {
+        if (!drawingModeCurrently.isFreeHand()) {
+        //if ((drawingModeCurrently.isPatternScreenStamp()) || (drawingModeCurrently.isScreenFullCopy())
+        //|| (drawingModeCurrently.isPatternOnlyStamp()) || (drawingModeCurrently.isScreenPatternCopy())) {
             // Get display grid size
-            int focusArea = (screenSize - patternSize);
+            int focusArea = (screenSize - patternSize) + 1;
             // Get task bar size
             int taskbarheight = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()
         	    - GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight());
@@ -1555,7 +1572,7 @@ public class GameOfLife extends JPanel implements ItemListener {
 	    int x = MouseInfo.getPointerInfo().getLocation().x - rulePanel.getWidth() - 4;
 	    int y = MouseInfo.getPointerInfo().getLocation().y - gridToolPanel.getHeight() - taskbarheight + 12;
 
-	    if ((x < focusArea) && (y < focusArea) && (x > 0) && (y > 0)) {
+	    if ((x <= focusArea) && (y <= focusArea) && (x > 0) && (y > 0)) {
 		if (leftFrame) { paintFromThisGrid(gridLeft, g2d); }
 		else { paintFromThisGrid(gridRight, g2d); }
 
