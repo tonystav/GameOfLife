@@ -440,7 +440,7 @@ public class GameOfLife extends JPanel implements ItemListener {
 				    }
 				}
 
-        		    // Limit drawing height to area between labels & controls and width to area between main grid and window edge
+        		    // Limit drawing height to area between labels & controls and width to area between main.java grid and window edge
         		    g2d.fillRect(pStartX + gridPanel.getWidth() + 2, pStartY + patternGridLabel.getHeight() + 2, rectangleSize, rectangleSize);
                 	}
         	    }
@@ -494,7 +494,7 @@ public class GameOfLife extends JPanel implements ItemListener {
 				    }
 				}
 
-	                    // Limit drawing height to area between labels & controls and width to area between main grid and window edge
+	                    // Limit drawing height to area between labels & controls and width to area between main.java grid and window edge
 	                    g2d.fillRect(pStartX + gridPanel.getWidth() + 2, pStartY + patternGridLabel.getHeight() + 2, rectangleSize, rectangleSize);
 
 	                    if (dragging) { patternPanel.repaint(); }
@@ -532,7 +532,7 @@ public class GameOfLife extends JPanel implements ItemListener {
 
             // Drawing Mode Buttons
             ButtonGroup drawingStyleButtons = new ButtonGroup();
-            JRadioButton freeHand = new JRadioButton("Freehand in Main Grid");
+            JRadioButton freeHand = new JRadioButton("Freehand in main.java Grid");
             freeHand.setSelected(true);
             freeHand.addActionListener(new ActionListener() {
         	@Override
@@ -543,7 +543,7 @@ public class GameOfLife extends JPanel implements ItemListener {
             drawingStyleButtons.add(freeHand);
             innerButtonPanel.add(freeHand);
 
-            JRadioButton stampFull = new JRadioButton("Stamp Pattern Grid +BG > Main Grid");
+            JRadioButton stampFull = new JRadioButton("Stamp Pattern Grid +BG > main.java Grid");
             stampFull.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -553,7 +553,7 @@ public class GameOfLife extends JPanel implements ItemListener {
             drawingStyleButtons.add(stampFull);
             innerButtonPanel.add(stampFull);
 
-            JRadioButton stampDrawing = new JRadioButton("Stamp Pattern > Main Grid");
+            JRadioButton stampDrawing = new JRadioButton("Stamp Pattern > main.java Grid");
             stampDrawing.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -563,7 +563,7 @@ public class GameOfLife extends JPanel implements ItemListener {
             drawingStyleButtons.add(stampDrawing);
             innerButtonPanel.add(stampDrawing);
 
-            JRadioButton copyFull = new JRadioButton("Copy Main Grid +BG > Pattern");
+            JRadioButton copyFull = new JRadioButton("Copy main.java Grid +BG > Pattern");
             copyFull.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -573,7 +573,7 @@ public class GameOfLife extends JPanel implements ItemListener {
             drawingStyleButtons.add(copyFull);
             innerButtonPanel.add(copyFull);
 
-            JRadioButton copyDrawing = new JRadioButton("Copy Main Grid > Pattern");
+            JRadioButton copyDrawing = new JRadioButton("Copy main.java Grid > Pattern");
             copyDrawing.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -664,62 +664,62 @@ public class GameOfLife extends JPanel implements ItemListener {
             dotSize.setLabelTable(cllSz);
 
             dotSize.addChangeListener(new ChangeListener() {
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			rectangleSize = (Integer) ((JSlider)e.getSource()).getValue();
-			gridSize = (screenSize / rectangleSize);
-		        patternSize = (screenSize / 3) + 1; patternGridSize = (gridSize / 3);
-		        resetGrids();
-	    		gridFrame.repaint();
-		}
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					rectangleSize = (Integer) ((JSlider)e.getSource()).getValue();
+					gridSize = (screenSize / rectangleSize);
+				        patternSize = (screenSize / 3) + 1; patternGridSize = (gridSize / 3);
+				        resetGrids();
+			    		gridFrame.repaint();
+				}
             });
             buttonPanel.add(rg);
             buttonPanel.add(dotSize);
 
             JButton startStopButton = new JButton("Start");
             startStopButton.addActionListener(new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (running) {
-				running = false;
-				timer.stop();
-				((JButton) e.getSource()).setText("Start");
-			}
-			else {
-				running = true;
-				timer.start();
-				((JButton) e.getSource()).setText("Stop");
-			}
-		}
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (running) {
+						running = false;
+						timer.stop();
+						((JButton) e.getSource()).setText("Start");
+					}
+					else {
+						running = true;
+						timer.start();
+						((JButton) e.getSource()).setText("Stop");
+					}
+				}
             });
             buttonPanel.add(startStopButton);
 
             JButton stepButton = new JButton("Step");
             stepButton.addActionListener(new ActionListener() {
-		@Override
-	        public void actionPerformed(ActionEvent e) {
-	    		if (leftFrame) { nextFrame(gridLeft, gridRight); }
-	    		else { nextFrame(gridRight, gridLeft); }
+            	@Override
+		        public void actionPerformed(ActionEvent e) {
+		    		if (leftFrame) { nextFrame(gridLeft, gridRight); }
+		    		else { nextFrame(gridRight, gridLeft); }
 
-	    		gridFrame.repaint();
-	        }
+		    		gridFrame.repaint();
+		        }
             });
             buttonPanel.add(stepButton);
 
             JButton clearButton = new JButton("Clear");
             clearButton.addActionListener(new ActionListener() {
-		@Override
-	        public void actionPerformed(ActionEvent e) {
-	        	gridPanel.removeAll();
+				@Override
+		        public void actionPerformed(ActionEvent e) {
+		        	gridPanel.removeAll();
 
-	    		initializeGrid(gridLeft);
-	    		initializeGrid(gridRight);
+		    		initializeGrid(gridLeft);
+		    		initializeGrid(gridRight);
 
-	    		gridFrame.repaint();
+		    		gridFrame.repaint();
 
-	    		generation = 0;
-	    		counterValue.setText(Integer.toString(generation));
-		}
+		    		generation = 0;
+		    		counterValue.setText(Integer.toString(generation));
+				}
             });
             buttonPanel.add(clearButton);
 
@@ -746,28 +746,28 @@ public class GameOfLife extends JPanel implements ItemListener {
             JCheckBox wrap = new JCheckBox("Wrap Grid");
             wrap.setSelected(false);
             wrap.addActionListener(new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JCheckBox wrpCB = (JCheckBox) e.getSource();
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					JCheckBox wrpCB = (JCheckBox) e.getSource();
 
-			if (wrpCB.isSelected()) { wrapAround = true; }
-			else { wrapAround = false; }
-		}
+					if (wrpCB.isSelected()) { wrapAround = true; }
+					else { wrapAround = false; }
+				}
             });
             buttonPanel.add(wrap);
 
             JCheckBox seeGrid = new JCheckBox("Show Grid Lines");
             seeGrid.setSelected(false);
             seeGrid.addChangeListener(new ChangeListener() {
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			JCheckBox cGrdCB = (JCheckBox) e.getSource();
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					JCheckBox cGrdCB = (JCheckBox) e.getSource();
 
-			if (cGrdCB.isSelected()) {showGrid = true; }
-			else { showGrid = false; }
+					if (cGrdCB.isSelected()) {showGrid = true; }
+					else { showGrid = false; }
 
-			gridFrame.repaint();
-		}
+					gridFrame.repaint();
+				}
             });
             buttonPanel.add(seeGrid);
             gridToolPanel.add(buttonPanel, BorderLayout.CENTER);
@@ -882,9 +882,9 @@ public class GameOfLife extends JPanel implements ItemListener {
         maxOnMinOff.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-		maximumOnMinimumOff = ((JSlider)e.getSource()).getValue();
+            	maximumOnMinimumOff = ((JSlider)e.getSource()).getValue();
             }
-	});
+        });
         groupRulePanel.add(maxOnMinOff);
 
         JPanel onOffPanel = new JPanel();
@@ -916,78 +916,22 @@ public class GameOfLife extends JPanel implements ItemListener {
         JPanel wildcardOnPanel = new JPanel();
         wildcardOnPanel.setLayout(new GridLayout(2, 8));
 
-        
         JCheckBox wildcardCBOn1 = new JCheckBox("1");
-        wildcardCBOn1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOn1.isSelected()) { wildcardsOn[1] = true; }
-                else { wildcardsOn[1] = false; };
-              }
-            });
-        wildcardOnPanel.add(wildcardCBOn1);
-
+        newCBInPanel(wildcardOnPanel, wildcardCBOn1, 1, wildcardsOn);
         JCheckBox wildcardCBOn2 = new JCheckBox("2");
-        wildcardCBOn2.addItemListener(new ItemListener() {
-        public void itemStateChanged(ItemEvent e) {
-            if (wildcardCBOn2.isSelected()) { wildcardsOn[2] = true; }
-            else { wildcardsOn[2] = false; };
-          }
-        });
-        wildcardOnPanel.add(wildcardCBOn2);
-
+        newCBInPanel(wildcardOnPanel, wildcardCBOn2, 2, wildcardsOn);
         JCheckBox wildcardCBOn3 = new JCheckBox("3");
-        wildcardCBOn3.addItemListener(new ItemListener() {
-        public void itemStateChanged(ItemEvent e) {
-            if (wildcardCBOn3.isSelected()) { wildcardsOn[3] = true; }
-            else { wildcardsOn[3] = false; };
-          }
-        });
-        wildcardOnPanel.add(wildcardCBOn3);
-
+        newCBInPanel(wildcardOnPanel, wildcardCBOn3, 3, wildcardsOn);
         JCheckBox wildcardCBOn4 = new JCheckBox("4");
-        wildcardCBOn4.addItemListener(new ItemListener() {
-        public void itemStateChanged(ItemEvent e) {
-            if (wildcardCBOn4.isSelected()) { wildcardsOn[4] = true; }
-            else { wildcardsOn[4] = false; };
-          }
-        });
-        wildcardOnPanel.add(wildcardCBOn4);
-
+        newCBInPanel(wildcardOnPanel, wildcardCBOn4, 4, wildcardsOn);
         JCheckBox wildcardCBOn5 = new JCheckBox("5");
-        wildcardCBOn5.addItemListener(new ItemListener() {
-        public void itemStateChanged(ItemEvent e) {
-            if (wildcardCBOn5.isSelected()) { wildcardsOn[5] = true; }
-            else { wildcardsOn[5] = false; };
-          }
-        });
-        wildcardOnPanel.add(wildcardCBOn5);
-
+        newCBInPanel(wildcardOnPanel, wildcardCBOn5, 5, wildcardsOn);
         JCheckBox wildcardCBOn6 = new JCheckBox("6");
-        wildcardCBOn6.addItemListener(new ItemListener() {
-        public void itemStateChanged(ItemEvent e) {
-            if (wildcardCBOn6.isSelected()) { wildcardsOn[6] = true; }
-            else { wildcardsOn[6] = false; };
-          }
-        });
-        wildcardOnPanel.add(wildcardCBOn6);
-
+        newCBInPanel(wildcardOnPanel, wildcardCBOn6, 6, wildcardsOn);
         JCheckBox wildcardCBOn7 = new JCheckBox("7");
-        wildcardCBOn7.addItemListener(new ItemListener() {
-        public void itemStateChanged(ItemEvent e) {
-            if (wildcardCBOn7.isSelected()) { wildcardsOn[7] = true; }
-            else { wildcardsOn[7] = false; };
-          }
-        });
-        wildcardOnPanel.add(wildcardCBOn7);
-
+        newCBInPanel(wildcardOnPanel, wildcardCBOn7, 7, wildcardsOn);
         JCheckBox wildcardCBOn8 = new JCheckBox("8");
-        wildcardCBOn8.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOn8.isSelected()) { wildcardsOn[8] = true; }
-                else { wildcardsOn[8] = false; };
-              }
-            });
-        wildcardOnPanel.add(wildcardCBOn8);
+        newCBInPanel(wildcardOnPanel, wildcardCBOn8, 8, wildcardsOn);
         groupRulePanel.add(wildcardOnPanel);
 
         JLabel wildCardOffTitle = new JLabel("Wildcard Off Settings", JLabel.CENTER);
@@ -998,76 +942,21 @@ public class GameOfLife extends JPanel implements ItemListener {
         wildcardOffPanel.setLayout(new GridLayout(2, 8));
 
         JCheckBox wildcardCBOff1 = new JCheckBox("1");
-        wildcardCBOff1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOff1.isSelected()) { wildcardsOff[1] = true; }
-                else { wildcardsOff[1] = false; };
-              }
-            });
-        wildcardOffPanel.add(wildcardCBOff1);
-
+        newCBInPanel(wildcardOffPanel, wildcardCBOff1, 1, wildcardsOff);
         JCheckBox wildcardCBOff2 = new JCheckBox("2");
-        wildcardCBOff2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOff2.isSelected()) { wildcardsOff[2] = true; }
-                else { wildcardsOff[2] = false; };
-              }
-            });
-        wildcardOffPanel.add(wildcardCBOff2);
-
+        newCBInPanel(wildcardOffPanel, wildcardCBOff2, 2, wildcardsOff);
         JCheckBox wildcardCBOff3 = new JCheckBox("3");
-        wildcardCBOff3.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOff3.isSelected()) { wildcardsOff[3] = true; }
-                else { wildcardsOff[3] = false; };
-              }
-            });
-        wildcardOffPanel.add(wildcardCBOff3);
-
+        newCBInPanel(wildcardOffPanel, wildcardCBOff3, 3, wildcardsOff);
         JCheckBox wildcardCBOff4 = new JCheckBox("4");
-        wildcardCBOff4.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOff4.isSelected()) { wildcardsOff[4] = true; }
-                else { wildcardsOff[4] = false; };
-              }
-            });
-        wildcardOffPanel.add(wildcardCBOff4);
-
+        newCBInPanel(wildcardOffPanel, wildcardCBOff4, 4, wildcardsOff);
         JCheckBox wildcardCBOff5 = new JCheckBox("5");
-        wildcardCBOff5.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOff5.isSelected()) { wildcardsOff[5] = true; }
-                else { wildcardsOff[5] = false; };
-              }
-            });
-        wildcardOffPanel.add(wildcardCBOff5);
-
+        newCBInPanel(wildcardOffPanel, wildcardCBOff5, 5, wildcardsOff);
         JCheckBox wildcardCBOff6 = new JCheckBox("6");
-        wildcardCBOff6.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOff6.isSelected()) { wildcardsOff[6] = true; }
-                else { wildcardsOff[6] = false; };
-              }
-            });
-        wildcardOffPanel.add(wildcardCBOff6);
-
+        newCBInPanel(wildcardOffPanel, wildcardCBOff6, 6, wildcardsOff);
         JCheckBox wildcardCBOff7 = new JCheckBox("7");
-        wildcardCBOff7.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOff7.isSelected()) { wildcardsOff[7] = true; }
-                else { wildcardsOff[7] = false; };
-              }
-            });
-        wildcardOffPanel.add(wildcardCBOff7);
-
+        newCBInPanel(wildcardOffPanel, wildcardCBOff7, 7, wildcardsOff);
         JCheckBox wildcardCBOff8 = new JCheckBox("8");
-        wildcardCBOff8.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (wildcardCBOff8.isSelected()) { wildcardsOff[8] = true; }
-                else { wildcardsOff[8] = false; };
-              }
-            });
-        wildcardOffPanel.add(wildcardCBOff8);
+        newCBInPanel(wildcardOffPanel, wildcardCBOff8, 8, wildcardsOff);
         groupRulePanel.add(wildcardOffPanel);
 
         JPanel resetPanel = new JPanel();
@@ -1113,23 +1002,34 @@ public class GameOfLife extends JPanel implements ItemListener {
         return rulePanel;
     }
 
+    private static void newCBInPanel(JPanel jpnl, JCheckBox jchkbx, int whichCB, boolean[] optionList) {
+    	jchkbx.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (jchkbx.isSelected()) { optionList[whichCB] = true; }
+                else { optionList[whichCB] = false; };
+              }
+            });
+
+    	jpnl.add(jchkbx);
+    }
+
     private static void initializeGrid(int[][] whichGrid) {
-	for (int row = 0; row < whichGrid.length; row++) {
-	    for (int col = 0; col < whichGrid.length; col++) {
-		whichGrid[row][col] = 0;
-	    }
-	}
+		for (int row = 0; row < whichGrid.length; row++) {
+		    for (int col = 0; col < whichGrid.length; col++) {
+		    	whichGrid[row][col] = 0;
+		    }
+		}
     }
 
     private static void resetGrids() {
-	// Set the grids to the designated grid size limit
-	gridLeft = new int[gridSize][gridSize];
-	gridRight = new int[gridSize][gridSize];
-	patternGrid = new int[patternGridSize][patternGridSize];
+		// Set the grids to the designated grid size limit
+		gridLeft = new int[gridSize][gridSize];
+		gridRight = new int[gridSize][gridSize];
+		patternGrid = new int[patternGridSize][patternGridSize];
 
-	initializeGrid(gridLeft);
-	initializeGrid(gridRight);
-	initializeGrid(patternGrid);
+		initializeGrid(gridLeft);
+		initializeGrid(gridRight);
+		initializeGrid(patternGrid);
     }
 
 	private static int checkCell(int[][] currentGrid, int row, int col) {
@@ -1395,31 +1295,31 @@ public class GameOfLife extends JPanel implements ItemListener {
     }
 
     // Separate copy and stamp methods for clarity
-    private void stampFullGrid(int mainGridRow, int mainGridCol) {
+    private void stampFullGrid(int javaGridRow, int javaGridCol) {
 	// First check which frame to use: less overhead than performing test inside loops
 	if (leftFrame) {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
-		    gridLeft[mainGridRow + currentRow][mainGridCol + currentCol] = patternGrid[currentRow][currentCol];
+		    gridLeft[javaGridRow + currentRow][javaGridCol + currentCol] = patternGrid[currentRow][currentCol];
 		}
 	    }
 	}
 	else {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
-		    gridRight[mainGridRow + currentRow][mainGridCol + currentCol] = patternGrid[currentRow][currentCol];
+		    gridRight[javaGridRow + currentRow][javaGridCol + currentCol] = patternGrid[currentRow][currentCol];
 		}
 	    }
 	}
     }
 
-    private void stampGrid(int mainGridRow, int mainGridCol) {
+    private void stampGrid(int javaGridRow, int javaGridCol) {
 	// First check which frame to use: less overhead than performing test inside loops
 	if (leftFrame) {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
 		    if (patternGrid[currentRow][currentCol] != 0) {
-			gridLeft[mainGridRow + currentRow][mainGridCol + currentCol] = patternGrid[currentRow][currentCol];
+			gridLeft[javaGridRow + currentRow][javaGridCol + currentCol] = patternGrid[currentRow][currentCol];
 		    }
 		}
 	    }
@@ -1428,38 +1328,38 @@ public class GameOfLife extends JPanel implements ItemListener {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
 		    if (patternGrid[currentRow][currentCol] != 0) {
-			gridRight[mainGridRow + currentRow][mainGridCol + currentCol] = patternGrid[currentRow][currentCol];
+			gridRight[javaGridRow + currentRow][javaGridCol + currentCol] = patternGrid[currentRow][currentCol];
 		    }
 		}
 	    }
 	}
     }
 
-    private void copyFullGrid(int mainGridRow, int mainGridCol) {
+    private void copyFullGrid(int javaGridRow, int javaGridCol) {
 	// First check which frame to use: less overhead than performing test inside loops
 	if (leftFrame) {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
-		    patternGrid[currentRow][currentCol] = gridLeft[mainGridRow + currentRow][mainGridCol + currentCol];
+		    patternGrid[currentRow][currentCol] = gridLeft[javaGridRow + currentRow][javaGridCol + currentCol];
 		}
 	    }
 	}
 	else {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
-		    patternGrid[currentRow][currentCol] = gridRight[mainGridRow + currentRow][mainGridCol + currentCol];
+		    patternGrid[currentRow][currentCol] = gridRight[javaGridRow + currentRow][javaGridCol + currentCol];
 		}
 	    }
 	}
     }
 
-    private void copyGrid(int mainGridRow, int mainGridCol) {
+    private void copyGrid(int javaGridRow, int javaGridCol) {
 	// First check which frame to use: less overhead than performing test inside loops
 	if (leftFrame) {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
-		    if (gridLeft[mainGridRow + currentRow][mainGridCol + currentCol] != 0) {
-			patternGrid[currentRow][currentCol] = gridLeft[mainGridRow + currentRow][mainGridCol + currentCol];
+		    if (gridLeft[javaGridRow + currentRow][javaGridCol + currentCol] != 0) {
+			patternGrid[currentRow][currentCol] = gridLeft[javaGridRow + currentRow][javaGridCol + currentCol];
 		    }
 		}
 	    }
@@ -1467,8 +1367,8 @@ public class GameOfLife extends JPanel implements ItemListener {
 	else {
 	    for (int currentRow = 0; currentRow < patternGrid.length; currentRow++) {
 		for (int currentCol = 0; currentCol < patternGrid.length; currentCol++) {
-		    if (gridRight[mainGridRow + currentRow][mainGridCol + currentCol] != 0) {
-			patternGrid[currentRow][currentCol] = gridRight[mainGridRow + currentRow][mainGridCol + currentCol];
+		    if (gridRight[javaGridRow + currentRow][javaGridCol + currentCol] != 0) {
+			patternGrid[currentRow][currentCol] = gridRight[javaGridRow + currentRow][javaGridCol + currentCol];
 		    }
 		}
 	    }
@@ -1498,16 +1398,16 @@ public class GameOfLife extends JPanel implements ItemListener {
     		}
     		else {
     		    if (displayModeCurrently.isBlackWhite()) {
-    			g2d.setColor(Color.WHITE);
+    		    	g2d.setColor(Color.WHITE);
     		    }
     		    else if (displayModeCurrently.isGreyScale()) {
-    			int greyShade = 255 / whichGrid[row][col];
-    			if (greyShade < 170) { greyShade *= 1.5; }
-    			Color clr = new Color(greyShade, greyShade, greyShade);
-    			g2d.setColor(clr);
+	    			int greyShade = 255 / whichGrid[row][col];
+	    			if (greyShade < 170) { greyShade *= 1.5; }
+	    			Color clr = new Color(greyShade, greyShade, greyShade);
+	    			g2d.setColor(clr);
     		    }
     		    else if (displayModeCurrently.isColorScale()) {
-			setCellColor(g2d, whichGrid[row][col]);
+    		    	setCellColor(g2d, whichGrid[row][col]);
     		    }
     		}
 
@@ -1527,16 +1427,16 @@ public class GameOfLife extends JPanel implements ItemListener {
     		}
     		else {
     		    if (displayModeCurrently.isBlackWhite()) {
-    			g2d.setColor(Color.WHITE);
+    		    	g2d.setColor(Color.WHITE);
     		    }
     		    else if (displayModeCurrently.isGreyScale()) {
-    			int greyShade = 255 / patternGrid[row][col];
-    			if (greyShade < 170) { greyShade *= 1.5; }
-    			Color clr = new Color(greyShade, greyShade, greyShade);
-    			g2d.setColor(clr);
+	    			int greyShade = 255 / patternGrid[row][col];
+	    			if (greyShade < 170) { greyShade *= 1.5; }
+	    			Color clr = new Color(greyShade, greyShade, greyShade);
+	    			g2d.setColor(clr);
     		    }
     		    else if (displayModeCurrently.isColorScale()) {
-			setCellColor(g2d, patternGrid[row][col]);
+    		    	setCellColor(g2d, patternGrid[row][col]);
     		    }
     		}
 
@@ -1560,26 +1460,26 @@ public class GameOfLife extends JPanel implements ItemListener {
 
         // Update select rectangle
         if (!drawingModeCurrently.isFreeHand()) {
-        //if ((drawingModeCurrently.isPatternScreenStamp()) || (drawingModeCurrently.isScreenFullCopy())
-        //|| (drawingModeCurrently.isPatternOnlyStamp()) || (drawingModeCurrently.isScreenPatternCopy())) {
-            // Get display grid size
-            int focusArea = (screenSize - patternSize) + 1;
-            // Get task bar size
-            int taskbarheight = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()
-        	    - GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight());
+	        //if ((drawingModeCurrently.isPatternScreenStamp()) || (drawingModeCurrently.isScreenFullCopy())
+	        //|| (drawingModeCurrently.isPatternOnlyStamp()) || (drawingModeCurrently.isScreenPatternCopy())) {
+	            // Get display grid size
+	            int focusArea = (screenSize - patternSize) + 1;
+	            // Get task bar size
+	            int taskbarheight = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()
+	        	    - GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight());
 
             // Get mouse location, then compensate for sizes of surrounding panels and task bar
-	    int x = MouseInfo.getPointerInfo().getLocation().x - rulePanel.getWidth() - 4;
-	    int y = MouseInfo.getPointerInfo().getLocation().y - gridToolPanel.getHeight() - taskbarheight + 12;
+		    int x = MouseInfo.getPointerInfo().getLocation().x - rulePanel.getWidth() - 4;
+		    int y = MouseInfo.getPointerInfo().getLocation().y - gridToolPanel.getHeight() - taskbarheight + 12;
 
-	    if ((x <= focusArea) && (y <= focusArea) && (x > 0) && (y > 0)) {
-		if (leftFrame) { paintFromThisGrid(gridLeft, g2d); }
-		else { paintFromThisGrid(gridRight, g2d); }
+		    if ((x <= focusArea) && (y <= focusArea) && (x > 0) && (y > 0)) {
+		    	if (leftFrame) { paintFromThisGrid(gridLeft, g2d); }
+		    	else { paintFromThisGrid(gridRight, g2d); }
 
-		g2d.setColor(Color.WHITE);
-		g2d.drawRect(x, y, patternSize, patternSize);
-	    }
-	}
+				g2d.setColor(Color.WHITE);
+				g2d.drawRect(x, y, patternSize, patternSize);
+		    }
+        }
 
         // Update grid lines
         if (showGrid) { paintGridLines(g2d); }
