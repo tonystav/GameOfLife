@@ -1,2 +1,2 @@
 # GameOfLife
-Feature-Rich Game of Life Experiment
+Feature-Rich Game of Life application
